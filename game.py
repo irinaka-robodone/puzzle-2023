@@ -8,7 +8,7 @@ class App:
         self.state = "start"
         pyxel.init(self.width, self.height)
         self.board = self.create_solvable_puzzle()
-        self.tile_size = 10
+        self.tile_size = 160//3
         pyxel.mouse(True)
         pyxel.run(self.update, self.draw)
         
@@ -33,8 +33,10 @@ class App:
         for y, row in enumerate(self.board):
             for x, tile in enumerate(row):
                 if tile != 0:
-                    pyxel.rect(x * self.tile_size, y * self.tile_size, self.tile_size, self.tile_size, 11)
-                    pyxel.text(x * self.tile_size + 5, y * self.tile_size + 5, str(tile), 7)
+                    pyxel.rect(x * self.tile_size, y * self.tile_size, self.tile_size, self.tile_size, 6)
+                    pyxel.text(x * self.tile_size + self.tile_size//2, y * self.tile_size + self.tile_size//2, str(tile), 0)
+                else:
+                    pyxel.rect(x * self.tile_size, y * self.tile_size, self.tile_size, self.tile_size, 13)
                     
     def is_solvable(self, numbers):
         return True
