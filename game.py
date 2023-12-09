@@ -4,11 +4,21 @@ import random
 class App:
     def __init__(self):
         self.width = 160
-        self.empty = (2, 2)
+        self.empty_tile = (2, 2)
         self.height = 160
         self.state = "start"
+        self.win = False
         pyxel.init(self.width, self.height)
         self.board = self.create_solvable_puzzle()
+        x,y=0,0
+        for i in self.board:
+            for j in i:
+                if j==0:
+                    self.empty_tile=(y,x)
+                y +=1
+            x +=1
+            y=0
+        print(self.board)
         self.tile_size = 50
         pyxel.mouse(True)
         pyxel.run(self.update, self.draw)
@@ -24,10 +34,19 @@ class App:
                 
                 # クリックされたタイルの位置を計算
                 tile_x, tile_y = mouse_x // self.tile_size, mouse_y // self.tile_size
+                print("empty->",self.empty_tile[0],self.empty_tile[1],"click",tile_x, tile_y)
                 if self.is_adjacent(self.empty_tile, (tile_x, tile_y)):
+                    print("ok")
                     # タイルを移動
                     self.move_tile(tile_x, tile_y)
-            
+                    if self.check_win():
+                        self.win = True
+                        self.state ="win"
+                        
+    def check_win(self):
+        expected = list(range(1, 9)) + [0]
+        flattened_board = [tile for row in self.board for tile in row]
+        return flattened_board == expected
     def draw(self):
         pyxel.cls(0)
         if self.state == "start":
@@ -56,7 +75,9 @@ class App:
     def move_tile(self, tile_x, tile_y):
         # タイルと空白スペースの位置を入れ替える
         self.board[self.empty_tile[1]][self.empty_tile[0]], self.board[tile_y][tile_x] = \
-        self.board[tile_y][tile_x], self.board[self.empty_tile[1]]self.empty_tile[0]
+        self.board[tile_y][tile_x], self.board[self.empty_tile[1]][self.empty_tile[0]]
+        
+        self.empty_tile = (tile_x, tile_y)
     def is_solvable(self, numbers):
         return True
     
@@ -67,5 +88,6 @@ class App:
             if self.is_solvable(numbers):
                 break
         return [numbers[i:i+3] for i in range(0, 9, 3)]
-
+    def draw_win(self):
+        pyxel.text(50, 60, "you win!", pyxel.frame_count % 16)
 App()
