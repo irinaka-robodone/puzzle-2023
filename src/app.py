@@ -90,4 +90,5 @@ class App:
         return [numbers[i:i+3] for i in range(0, 9, 3)]
     def draw_win(self):
         pyxel.text(50, 60, "you win!", pyxel.frame_count % 16)
+
 App()
