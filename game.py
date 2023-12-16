@@ -10,7 +10,7 @@ class App:
         self.win = False
         pyxel.init(self.width, self.height)
         self.board = self.create_solvable_puzzle()
-        x,y=0,0
+        x,y = 0,0
         for i in self.board:
             for j in i:
                 if j==0:
@@ -51,11 +51,12 @@ class App:
         pyxel.cls(0)
         if self.state == "start":
             self.draw_start()
-        if self.state == "start":
-            self.draw_start()
         if self.state == "play":
             # self.draw_play()
             self.draw_bodo()
+        if self.state == "win":
+            self.draw_win()
+            
             
     def draw_start(self):
         pyxel.text(50, 60, "Click to start", pyxel.frame_count % 16)
@@ -89,5 +90,5 @@ class App:
                 break
         return [numbers[i:i+3] for i in range(0, 9, 3)]
     def draw_win(self):
-        pyxel.text(50, 60, "you win!", pyxel.frame_count % 16)
+        pyxel.text(50, 60, "You Win!", pyxel.frame_count % 16)
 App()
