@@ -8,7 +8,7 @@ class App:
         self.height = 160
         self.state = "start"
         self.win = False
-        pyxel.init(self.width, self.height)
+        pyxel.init(self.width, self.height, fps=60)
         self.board = self.create_solvable_puzzle()
         x,y = 0,0
         for i in self.board:
@@ -21,13 +21,14 @@ class App:
         print(self.board)
         self.tile_size = 50
         pyxel.mouse(True)
+        self.start_time = pyxel.frame_count
         pyxel.run(self.update, self.draw)
         
     def update(self):
         if not self.state == "play" and pyxel.btnp(pyxel.MOUSE_BUTTON_LEFT):
             self.state = "play"
-            
         if self.state == "play":
+            self.elapsed_time = (pyxel.frame_count - self.start_time) // 60
             if pyxel.btnp(pyxel.MOUSE_BUTTON_LEFT):
                 # マウスのクリック位置を取得
                 mouse_x, mouse_y = pyxel.mouse_x, pyxel.mouse_y
@@ -47,6 +48,8 @@ class App:
         expected = list(range(1, 9)) + [0]
         flattened_board = [tile for row in self.board for tile in row]
         return flattened_board == expected
+    # 画面をクリア
+    
     def draw(self):
         pyxel.cls(0)
         if self.state == "start":
