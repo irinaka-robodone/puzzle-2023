@@ -7,6 +7,7 @@ class App:
         self.empty_tile = (2, 2)
         self.height = 160
         self.state = "start"
+        self.board_size = 3
         self.win = False
         pyxel.init(self.width, self.height, fps=60)
         self.board = self.create_solvable_puzzle()
@@ -43,7 +44,11 @@ class App:
                     if self.check_win():
                         self.win = True
                         self.state ="win"
-                        
+        if self.state == "win":
+            self.board_size = 4
+            if pyxel.btnp(pyxel.MOUSE_BUTTON_LEFT):
+                self.board = self.create_solvable_puzzle()
+                self.state = "play"
     def check_win(self):
         expected = list(range(1, 9)) + [0]
         flattened_board = [tile for row in self.board for tile in row]
@@ -94,4 +99,10 @@ class App:
         return [numbers[i:i+3] for i in range(0, 9, 3)]
     def draw_win(self):
         pyxel.text(50, 60, "You Win!", pyxel.frame_count % 16)
+    def draw_bodo(self):
+        for y, row in enumerate(self.board):
+            for x, tile in enumerate(row):
+                if tile != 0:
+                    pyxel.rect(x * self.tile_size, y * self.tile_size, self.tile_size, self.tile_size, 11)
+                    pyxel.text(x * self.tile_size + 25, y * self.tile_size + 25, str(tile), 7)
 App()
