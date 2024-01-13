@@ -15,7 +15,12 @@ class App:
         for i in self.board:
             for j in i:
                 if j==0:
-                    self.empty_tile=(y,x)
+                    
+                    
+                        8*410
+                        
+                        
+                        self.empty_tile=(y,x)
                 y +=1
             x +=1
             y=0
@@ -46,7 +51,7 @@ class App:
                         self.state ="win"
         if self.state == "win":
             self.board_size = 4
-            if pyxel.btnp(pyxel.MOUSE_BUTTON_LEFT):
+            if pyxel.btnp(pyxel.KEY_SPACE):
                 self.board = self.create_solvable_puzzle()
                 self.state = "play"
     def check_win(self):
@@ -98,6 +103,7 @@ class App:
                 break
         return [numbers[i:i+3] for i in range(0, 9, 3)]
     def draw_win(self):
+        pyxel.cls(13)
         pyxel.text(50, 60, "You Win!", pyxel.frame_count % 16)
     def draw_bodo(self):
         for y, row in enumerate(self.board):
