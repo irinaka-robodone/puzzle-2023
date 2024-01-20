@@ -40,7 +40,7 @@ class App:
                 mouse_x, mouse_y = pyxel.mouse_x, pyxel.mouse_y
                 
                 # クリックされたタイルの位置を計算
-                tile_x, tile_y = mouse_x // self.tile_size, mouse_y // self.tile_size
+                tile_x, tile_y = int(mouse_x // self.tile_size), int(mouse_y // self.tile_size)
                 print("empty->",self.empty_tile[0],self.empty_tile[1],"click",tile_x, tile_y)
                 if self.is_adjacent(self.empty_tile, (tile_x, tile_y)):
                     print("ok")
@@ -50,8 +50,9 @@ class App:
                         self.win = True
                         self.state ="win"
         if self.state == "win":
-            self.board_size = 4
             if pyxel.btnp(pyxel.KEY_SPACE):
+                self.board_size += 1
+                self.tile_size = int(self.tile_size * 3 / self.board_size)
                 self.board = self.create_solvable_puzzle()
                 self.state = "play"
     def check_win(self):
@@ -74,12 +75,6 @@ class App:
     def draw_start(self):
         pyxel.text(50, 60, "Click to start", pyxel.frame_count % 16)
     
-    def draw_bodo(self):
-        for y, row in enumerate(self.board):
-            for x, tile in enumerate(row):
-                if tile != 0:
-                    pyxel.rect(x * self.tile_size, y * self.tile_size, self.tile_size, self.tile_size, 11)
-                    pyxel.text(x * self.tile_size + 25, y * self.tile_size + 25, str(tile), 7)
                     
     def is_adjacent(self, tile1, tile2):
         # タイルが隣接しているかをチェックする
@@ -96,15 +91,25 @@ class App:
         return True
     
     def create_solvable_puzzle(self):
-        numbers = list(range(1, 9)) + [0]  # 1から8と空きスペースの0
+        numbers = list(range(1, self.board_size*self.board_size)) + [0]  # 1から8と空きスペースの0
         while True:
             random.shuffle(numbers)
             if self.is_solvable(numbers):
                 break
-        return [numbers[i:i+3] for i in range(0, 9, 3)]
+        # tiles = list(range(1, 9)) + [0, 0, 0]
+        # board = [tiles[i:i+4] for i in range(0, len(tiles), 4)]
+        board = [numbers[i:i+self.board_size] for i in range(0, self.board_size*self.board_size, self.board_size)]
+        
+        for y, row in enumerate(board):
+            for x, cell in enumerate(row):
+                if cell == 0:
+                    self.empty_tile = (int(x), int(y))
+        return board
+
     def draw_win(self):
         pyxel.cls(13)
         pyxel.text(50, 60, "You Win!", pyxel.frame_count % 16)
+    
     def draw_bodo(self):
         for y, row in enumerate(self.board):
             for x, tile in enumerate(row):
