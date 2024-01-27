@@ -1,15 +1,20 @@
 import pyxel
 import random
+import time
 
 class App:
     def __init__(self):
         self.width = 160
         self.empty_tile = (2, 2)
+        self.clear_time = None
         self.height = 160
         self.state = "start"
         self.board_size = 3
         self.win = False
+        self.ranking =[]
         pyxel.init(self.width, self.height, fps=60)
+        self.start_time = pyxel.frame_count
+        
         self.board = self.create_solvable_puzzle()
         x,y = 0,0
         for i in self.board:
@@ -68,8 +73,11 @@ class App:
         if self.state == "play":
             # self.draw_play()
             self.draw_bodo()
+            self.keikazikann = int(time.time()-self.hazime)
+            pyxel.text(0, 0, str(self.keikazikann), 3)
         if self.state == "win":
             self.draw_win()
+            
             
             
     def draw_start(self):
@@ -104,12 +112,17 @@ class App:
             for x, cell in enumerate(row):
                 if cell == 0:
                     self.empty_tile = (int(x), int(y))
+        
+        self.hazime = time.time()
         return board
 
     def draw_win(self):
         pyxel.cls(13)
         pyxel.text(50, 60, "You Win!", pyxel.frame_count % 16)
-    
+        pyxel.text(60, 70, str(self.keikazikann), pyxel.frame_count % 16)
+        pyxel.text(50, 70, "Ranking:", 7)
+        for i, time in enumerate(self.ranking):
+            pyxel.text(50, 80 + 10 * i, f"{i + 1}: {time:.2f}s", 7)
     def draw_bodo(self):
         for y, row in enumerate(self.board):
             for x, tile in enumerate(row):
