@@ -1,6 +1,7 @@
 import pyxel
 import random
 import time
+import json
 
 class App:
     def __init__(self):
@@ -11,7 +12,8 @@ class App:
         self.state = "start"
         self.board_size = 3
         self.win = False
-        self.ranking =[]
+        self.ranking = []
+        self.filename = "out/rireki.txt"
         pyxel.init(self.width, self.height, fps=60)
         self.start_time = pyxel.frame_count
         
@@ -54,12 +56,18 @@ class App:
                     if self.check_win():
                         self.win = True
                         self.state ="win"
+                        self.ranking.append(self.keikazikann)
+                        self.sebu()
         if self.state == "win":
             if pyxel.btnp(pyxel.KEY_SPACE):
                 self.board_size += 1
                 self.tile_size = int(self.tile_size * 3 / self.board_size)
                 self.board = self.create_solvable_puzzle()
                 self.state = "play"
+    def sebu(self):
+        with open(self.filename, "w") as file:
+            for time in self.ranking:
+                file.write(f"{time}\n")
     def check_win(self):
         expected = list(range(1, 9)) + [0]
         flattened_board = [tile for row in self.board for tile in row]
