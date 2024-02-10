@@ -12,7 +12,7 @@ class App:
         self.state = "start"
         self.board_size = 3
         self.win = False
-        self.ranking = []
+        self.ranking = self.load_keikazikan_from_file("out/rireki.txt")
         self.filename = "out/rireki.txt"
         pyxel.init(self.width, self.height, fps=60)
         self.start_time = pyxel.frame_count
@@ -65,9 +65,10 @@ class App:
                 self.board = self.create_solvable_puzzle()
                 self.state = "play"
     def sebu(self):
-        with open(self.filename, "w") as file:
+        with open(self.filename, "+a") as file:
             for time in self.ranking:
                 file.write(f"{time}\n")
+        
     def check_win(self):
         expected = list(range(1, 9)) + [0]
         flattened_board = [tile for row in self.board for tile in row]
@@ -137,4 +138,14 @@ class App:
                 if tile != 0:
                     pyxel.rect(x * self.tile_size, y * self.tile_size, self.tile_size, self.tile_size, 11)
                     pyxel.text(x * self.tile_size + 25, y * self.tile_size + 25, str(tile), 7)
+    def load_keikazikan_from_file(self, filename="ranking.txt"):
+        try:
+            with open(filename, "r") as file:
+                ranking = [int(line.striip()) for line in file]
+        except FileNotFoundError:
+            ranking = []
+            print("ranking not found!")
+        return ranking
+    
+            
 App()
