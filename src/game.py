@@ -14,7 +14,7 @@ class App:
         self.win = False
         self.ranking = self.load_keikazikan_from_file("out/rireki.txt")
         self.filename = "out/rireki.txt"
-        pyxel.init(self.width, self.height, fps=60)
+        pyxel.init(self.width, self.height, fps=60, title="数字パズル")
         self.start_time = pyxel.frame_count
         
         self.board = self.create_solvable_puzzle()
@@ -90,6 +90,7 @@ class App:
             
             
     def draw_start(self):
+        pyxel.text(50, 70, "suuzipazuruge-mu", pyxel.frame_count % 7)
         pyxel.text(50, 60, "Click to start", pyxel.frame_count % 16)
     
                     
