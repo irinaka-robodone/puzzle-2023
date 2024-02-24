@@ -15,6 +15,8 @@ class App:
         self.ranking = self.load_keikazikan_from_file("out/rireki.txt")
         self.filename = "out/rireki.txt"
         pyxel.init(self.width, self.height, fps=60, title="数字パズル")
+        pyxel.load("asset.pyxres")
+        pyxel.playm(0, 0, True)
         self.start_time = pyxel.frame_count
         
         self.board = self.create_solvable_puzzle()
@@ -39,6 +41,7 @@ class App:
         
     def update(self):
         if not self.state == "play" and pyxel.btnp(pyxel.MOUSE_BUTTON_LEFT):
+            pyxel.stop()
             self.state = "play"
         if self.state == "play":
             self.elapsed_time = (pyxel.frame_count - self.start_time) // 60
@@ -103,6 +106,7 @@ class App:
         # タイルと空白スペースの位置を入れ替える
         self.board[self.empty_tile[1]][self.empty_tile[0]], self.board[tile_y][tile_x] = \
         self.board[tile_y][tile_x], self.board[self.empty_tile[1]][self.empty_tile[0]]
+        pyxel.playm(1, 0, False)
         
         self.empty_tile = (tile_x, tile_y)
     def is_solvable(self, numbers):
