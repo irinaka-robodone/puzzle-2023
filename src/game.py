@@ -61,6 +61,10 @@ class App:
                         self.state ="win"
                         self.ranking.append(self.keikazikann)
                         self.sebu()
+            # もしスペースキーを押したらメニューに戻る
+            if pyxel.btnp(pyxel.KEY_SPACE):
+                self.state = "start"
+                self.board = self.create_solvable_puzzle()
         if self.state == "win":
             if pyxel.btnp(pyxel.KEY_SPACE):
                 self.board_size += 1
