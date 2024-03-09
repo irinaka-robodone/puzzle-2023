@@ -13,7 +13,7 @@ class App:
         self.board_size = 3
         self.win = False
         self.ranking = self.load_keikazikan_from_file("out/rireki.txt")
-        self.filename = "out/rireki.txt"
+        self.filename = "./out/rireki.txt"
         pyxel.init(self.width, self.height, fps=60, title="数字パズル")
         pyxel.load("asset.pyxres")
         pyxel.playm(0, 0, True)
@@ -77,7 +77,7 @@ class App:
                 file.write(f"{time}\n")
         
     def check_win(self):
-        expected = list(range(1, 9)) + [0]
+        expected = list(range(1, self.board_size*self.board_size)) + [0]
         flattened_board = [tile for row in self.board for tile in row]
         return flattened_board == expected
     # 画面をクリア
@@ -150,7 +150,7 @@ class App:
     def load_keikazikan_from_file(self, filename="ranking.txt"):
         try:
             with open(filename, "r") as file:
-                ranking = [int(line.striip()) for line in file]
+                ranking = [int(line.strip()) for line in file]
         except FileNotFoundError:
             ranking = []
             print("ranking not found!")
