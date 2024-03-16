@@ -1,21 +1,26 @@
 import pyxel
 import random
 import time
-import json
+
+from font import BDFRenderer
 
 class App:
     def __init__(self):
-        self.width = 160
+        self.width = 200
+        self.height = 200
         self.empty_tile = (2, 2)
         self.clear_time = None
-        self.height = 160
         self.state = "start"
         self.board_size = 3
+        self.FPS = 60
         self.win = False
         self.ranking = self.load_keikazikan_from_file("out/rireki.txt")
         self.filename = "./out/rireki.txt"
-        pyxel.init(self.width, self.height, fps=60, title="数字パズル")
+        pyxel.init(self.width, self.height, fps=self.FPS, title="数字パズル")
         pyxel.load("asset.pyxres")
+        self.font_s = BDFRenderer("assets/b14.bdf")
+        self.font_m = BDFRenderer("assets/b16.bdf")
+        self.font_l = BDFRenderer("assets/b24.bdf")
         pyxel.playm(0, 0, True)
         self.start_time = pyxel.frame_count
         
@@ -80,7 +85,6 @@ class App:
         expected = list(range(1, self.board_size*self.board_size)) + [0]
         flattened_board = [tile for row in self.board for tile in row]
         return flattened_board == expected
-    # 画面をクリア
     
     def draw(self):
         pyxel.cls(0)
@@ -94,13 +98,14 @@ class App:
         if self.state == "win":
             self.draw_win()
             
-            
-            
     def draw_start(self):
-        pyxel.text(50, 70, "suuzipazuruge-mu", pyxel.frame_count % 7)
-        pyxel.text(50, 60, "Click to start", pyxel.frame_count % 16)
-    
-                    
+        title = "数字パズルゲーム"
+        self.font_m.draw_text(20, 70, title, pyxel.frame_count*3//self.FPS % 16)
+        guide = "クリック/タップして"
+        self.font_s.draw_text(26, 100, guide, pyxel.frame_count*3//self.FPS % 16)
+        guide2 = "スタート!"
+        self.font_s.draw_text(50, 130, guide2, pyxel.frame_count*3//self.FPS % 16)
+        
     def is_adjacent(self, tile1, tile2):
         # タイルが隣接しているかをチェックする
         return (abs(tile1[0] - tile2[0]) == 1 and tile1[1] == tile2[1]) or \
@@ -138,7 +143,7 @@ class App:
         pyxel.cls(13)
         pyxel.text(50, 60, "You Win!", pyxel.frame_count % 16)
         pyxel.text(60, 70, str(self.keikazikann), pyxel.frame_count % 16)
-        pyxel.text(50, 70, "Ranking:", 7)
+        self.font_m.draw_text(30, 60, "ランキング!", 7)
         for i, time in enumerate(self.ranking):
             pyxel.text(50, 80 + 10 * i, f"{i + 1}: {time:.2f}s", 7)
     def draw_bodo(self):
